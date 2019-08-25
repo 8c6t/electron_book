@@ -1,0 +1,15 @@
+{
+  "name": "01_electron_first_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "8c6t",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^6.0.3"
+  }
+}
