@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import Errors from './Errors';
 import firebase from 'firebase/app';
+
+import { useInput } from '../common/customHooks';
+import Errors from './Errors';
 
 const FORM_STYLE = {
   margin: "0 auto",
@@ -14,19 +16,11 @@ const SIGNUP_LINK_STYLE = {
 };
 
 const Login = ({ history }) => {
-  const [email, setEmail] = useState(localStorage.userEmail || '');
-  const [password, setPassword] = useState(localStorage.userPassword || '');
+  const [email, onChangeEmail] = useInput(localStorage.userEmail || '');
+  const [password, onChangePassword] = useInput(localStorage.userPassword || '');
   const [errors, setErrors] = useState([]);
 
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value);
-  }
-
-  const onChangePassword = (e) => {
-    setPassword(e.target.value);
-  }
-
-  const onSubmit = (e) => {
+  const onSubmit = useCallback((e) => {
     const errors = [];
     let isValid = true;
     e.preventDefault();
@@ -55,7 +49,7 @@ const Login = ({ history }) => {
       .catch(() => {
         setErrors(["Incorrect email or password"]);
       });
-  }
+  }, [email, password]);
 
   return (
     <form style={FORM_STYLE} onSubmit={onSubmit}>
