@@ -1,21 +1,120 @@
-import React from 'react';
-import { Link, Route } from 'react-router-dom';
-import Room from './Room';
+import React, { useState, useEffect, useRef } from 'react';
+import { Route } from 'react-router-dom';
+import firebase from 'firebase/app';
 
-const Rooms = ({ match }) => {
-  return (
-    <div>
-      <h2>Rooms</h2>
-      <ul>
-        <li><Link to={`${match.url}/1`}>Room 1</Link></li>
-        <li><Link to={`${match.url}/2`}>Room 2</Link></li>
-      </ul>
-      <div>
-        <Route exact path={`${match.url}`} render={() => (<div>Choose room</div>)} />
-        <Route path={`${match.url}/:roomId`} component={Room} />
+import Room from './Room_proposal';
+import RoomItem from './RoomItem';
+
+const ICON_CHAT_STYLE = {
+  fontSize: 120,
+  color: '#DDD',
+};
+
+const FORM_STYLE = {
+  display: 'flex',
+};
+
+const BUTTON_STYLE = {
+  marginLeft: 20,
+};
+
+const Rooms = ({ match, history }) => {
+  const [roomName, setRoomName] = useState('');
+  const [rooms, setRooms] = useState([]);
+
+  const db = useRef(firebase.database());
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = () => {
+    return db.current.ref('/chatrooms').limitToLast(20).once('value')
+      .then(snapshot => {
+        const rooms = [];
+        snapshot.forEach(item => {
+          rooms.push(Object.assign({ key: item.key }, item.val()));
+        });
+        setRooms(rooms);
+      });
+  }
+
+  const handleOnChangeRoomName = (e) => {
+    setRoomName(e.target.value);
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!roomName.length) {
+      return;
+    }
+
+    const newRoomRef = db.current.ref('/chatrooms').push();
+    const newRoom = {
+      description: roomName
+    };
+
+    newRoomRef.update(newRoom)
+      .then(() => {
+        setRoomName('');
+        return fetchRooms().then(() => {
+          history.push(`/rooms/${newRoomRef.key}`)
+        });
+      });
+  }
+
+  const renderRoomList = () => {
+    return (
+      <div className="list-group">
+        {rooms.map(r =>
+          <RoomItem
+            url={`${match.url}`}
+            room={r}
+            key={r.key}
+            selected={r.key === match.params.roomId}
+          />) 
+        }
+        <div className="list-group-header">
+          <form style={FORM_STYLE} onSubmit={onSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="New room"
+              onChange={handleOnChangeRoomName}
+              value={roomName}
+            />
+            <button className="btn btn-default" style={BUTTON_STYLE}>
+              <span className="icon icon-plus" />
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    );
+  }
+
+  const renderRoom = () => (
+    <>
+      <Route exact path={`${match.url}`} render={() => (
+        <div className="text-center">
+          <div style={ICON_CHAT_STYLE}>
+            <span className="icon icon-chat" />
+          </div>
+          <p>
+            Join a chat room from the sidebar or create your chat room
+          </p>
+        </div>
+      )}/>
+      <Route path={`${match.url}/:roomId`} component={Room} />
+    </>
   );
+
+  return (
+    <div className="pane-group">
+      <div className="pane-sm sidebar">{renderRoomList()}</div>
+      <div className="pane">{renderRoom()}</div>
+    </div>
+  )
+
 }
 
 export default Rooms;
