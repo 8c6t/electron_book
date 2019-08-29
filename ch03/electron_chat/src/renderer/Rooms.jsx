@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 
-import Room from './Room_proposal';
+import Room from './Room';
 import RoomItem from './RoomItem';
 
 const ICON_CHAT_STYLE = {
