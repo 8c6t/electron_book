@@ -6,10 +6,10 @@ const LINK_STYLE = {
   textDecoration: 'none'
 };
 
-const RoomItem = ({ url, room, selected }) => {
+const RoomItem = ({ url, room, selected, onClickRoomItem }) => {
   const { description, key } = room;
   return (
-    <div className={selected ? "list-group-item selected" : "list-group-item"}>
+    <div className={selected ? "list-group-item selected" : "list-group-item"} onClick={() => onClickRoomItem(key)} >
       <Link to={`${url}/${key}`} style={LINK_STYLE}>
         <div className="media-body">
           <strong>{description}</strong>

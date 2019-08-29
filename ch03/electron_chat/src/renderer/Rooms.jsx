@@ -21,6 +21,7 @@ const BUTTON_STYLE = {
 const Rooms = ({ match, history }) => {
   const [roomName, setRoomName] = useState('');
   const [rooms, setRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState('');
 
   const db = useRef(firebase.database());
 
@@ -37,6 +38,10 @@ const Rooms = ({ match, history }) => {
         });
         setRooms(rooms);
       });
+  }
+
+  const handleOnClickRoomItem = (key) => {
+    setSelectedRoom(key);
   }
 
   const handleOnChangeRoomName = (e) => {
@@ -58,6 +63,7 @@ const Rooms = ({ match, history }) => {
       .then(() => {
         setRoomName('');
         return fetchRooms().then(() => {
+          setSelectedRoom(newRoomRef.key);
           history.push(`/rooms/${newRoomRef.key}`)
         });
       });
@@ -71,7 +77,8 @@ const Rooms = ({ match, history }) => {
             url={`${match.url}`}
             room={r}
             key={r.key}
-            selected={r.key === match.params.roomId}
+            selected={r.key === selectedRoom}
+            onClickRoomItem={handleOnClickRoomItem}
           />) 
         }
         <div className="list-group-header">
