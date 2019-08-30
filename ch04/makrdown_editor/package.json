@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^6.0.5",
+    "marked": "^0.7.0",
     "photon": "github:connors/photon",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
@@ -23,6 +24,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
+    "classnames": "^2.2.6",
     "css-loader": "^3.2.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.3",
