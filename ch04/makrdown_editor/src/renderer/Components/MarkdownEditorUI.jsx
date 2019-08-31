@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import { ipcRenderer } from 'electron';
+import React, { useState, useEffect, useCallback } from 'react';
 import classnames from 'classnames/bind';
 
 import Editor from './Editor';
@@ -10,6 +11,20 @@ const cx = classnames.bind(style);
 
 const MarkdownEditorUI = () => {
   const [text, setText] = useState('');
+
+  useEffect(() => {
+    ipcRenderer.on("REQUEST_TEXT", () => {
+      ipcRenderer.send("REPLY_TEXT", text);
+    });
+
+    ipcRenderer.on("SEND_TEXT", (_e, text) => {
+      setText(text);
+    });
+
+    return () => {
+      ipcRenderer.removeAllListeners();
+    };
+  }, [text]);
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);

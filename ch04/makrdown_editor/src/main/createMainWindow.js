@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import os from 'os';
 import path from 'path';
 
@@ -17,6 +17,20 @@ class MainWindow {
     this.window.on('closed', () => {
       this.window =- null;
     });
+  }
+
+  requestText() {
+    return new Promise(resolve => {
+      this.window.webContents.send("REQUEST_TEXT");
+      ipcMain.once("REPLY_TEXT", (_e, text) => {
+        console.log("reply:", text);
+        resolve(text)
+      });
+    });
+  }
+
+  sendText(text) {
+    this.window.webContents.send('SEND_TEXT', text);
   }
 }
 

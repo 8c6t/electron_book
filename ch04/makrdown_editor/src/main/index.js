@@ -1,12 +1,16 @@
 import { app } from 'electron';
-import createMainWindow from './createMainWindow';
 import setAppMenu from './setAppMenu';
 import menuOptions from './menuOptions';
 
-let mainWindow = null;
+import createMainWindow from './createMainWindow';
+import createFileManager from './createFileManager';
+
+export let mainWindow = null;
+export let fileManager = null;
 
 app.on('ready', () => {
   mainWindow = createMainWindow();
+  fileManager = createFileManager();
   setAppMenu(menuOptions);
 });
 
