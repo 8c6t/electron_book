@@ -15,6 +15,7 @@ module.exports = {
   entry: {
     'main/index': './src/main/index.js',
     'renderer/index': './src/renderer/index.jsx',
+    'renderer/pdf': './src/renderer/pdf.jsx',
   },
   output: {
     filename: '[name].js',
