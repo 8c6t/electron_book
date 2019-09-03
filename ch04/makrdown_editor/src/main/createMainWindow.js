@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, ipcMain, shell } from 'electron';
 import os from 'os';
 import path from 'path';
 
@@ -17,6 +17,11 @@ class MainWindow {
     this.window.on('closed', () => {
       this.window =- null;
     });
+
+    this.window.webContents.on('will-navigate', (e, url) => {
+      e.preventDefault();
+      shell.openExternal(url);
+    })
   }
 
   requestText() {
