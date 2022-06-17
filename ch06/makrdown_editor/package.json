@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^6.0.5",
+    "electron": "^15.5.5",
     "emojione": "^4.5.0",
     "marked": "^0.7.0",
     "photon": "github:connors/photon",
